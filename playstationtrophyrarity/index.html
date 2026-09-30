@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlayStation Trophy Rarity Calculator - Calculators - Warren Woodhouse</title>
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --bg: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .calculator {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 {
+            text-align: center;
+            color: var(--text-main);
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .base-number-display {
+            background-color: #eff6ff;
+            color: var(--primary);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            border: 1px solid #bfdbfe;
+        }
+
+        .base-label {
+            display: block;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            font-weight: normal;
+            margin-bottom: 0.25rem;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        select, input {
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        select:focus, input:focus {
+            border-color: var(--primary);
+        }
+
+        select {
+            flex: 1;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        input {
+            flex: 2;
+        }
+
+        button {
+            width: 100%;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .result-container {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background-color: #f9fafb;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px dashed #d1d5db;
+        }
+
+        .result-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-value {
+            font-size: 1.75rem;
+            font-weight: bold;
+            color: var(--text-main);
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator">
+        <h2>PlayStation Trophy Rarity Calculator</h2>
+        <h3>This calculator can be used to return a number of how many players (numbers, not names) have earned a particular trophy. For instance, the platinum trophy for Fallout: New Vegas reads that 1.1% of players have earned it, this calculator will provide you with an exact number based on the total number of active PlayStation gamers. So the answer for 1.1% is 1,375,000 - that's how many players have earned the trophy.</h3>
+        <h4>125 million is the base number for the calculator.</h4>
+      
+        <div class="base-number-display">
+            <span class="base-label">Base Number</span>
+            125,000,000
+        </div>
+
+        <div class="input-group">
+            <select id="operation">
+                <option value="multiply">Multiply by (×)</option>
+                <option value="divide">Divide by (÷)</option>
+                <option value="add">Add (+)</option>
+                <option value="subtract">Subtract (-)</option>
+                <option value="percent">Percentage of (%)</option>
+            </select>
+            <input type="number" id="userInput" placeholder="Enter a number..." step="any">
+        </div>
+
+        <button onclick="calculate()">Calculate</button>
+
+        <div class="result-container" id="resultContainer" style="display: none;">
+            <div class="result-label">Result</div>
+            <div class="result-value" id="resultValue">0</div>
+        </div>
+    </div>
+
+    <script>
+        const BASE_NUMBER = 125000000;
+
+        function formatNumber(num) {
+            // Check if the number has decimals. If it does, show up to 2 decimal places.
+            if (num % 1 !== 0) {
+                return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
+            // Otherwise, just format with commas
+            return num.toLocaleString('en-US');
+        }
+
+        function calculate() {
+            const operation = document.getElementById('operation').value;
+            const inputValue = document.getElementById('userInput').value;
+            const resultContainer = document.getElementById('resultContainer');
+            const resultValue = document.getElementById('resultValue');
+
+            if (inputValue === '') {
+                alert("Please enter a number to calculate.");
+                return;
+            }
+
+            const num = parseFloat(inputValue);
+            let result = 0;
+
+            switch (operation) {
+                case 'multiply':
+                    result = BASE_NUMBER * num;
+                    break;
+                case 'divide':
+                    if (num === 0) {
+                        alert("Cannot divide by zero!");
+                        return;
+                    }
+                    result = BASE_NUMBER / num;
+                    break;
+                case 'add':
+                    result = BASE_NUMBER + num;
+                    break;
+                case 'subtract':
+                    result = BASE_NUMBER - num;
+                    break;
+                case 'percent':
+                    result = BASE_NUMBER * (num / 100);
+                    break;
+            }
+
+            resultValue.textContent = formatNumber(result);
+            resultContainer.style.display = 'block';
+        }
+
+        // Add Enter key support
+        document.getElementById('userInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                calculate();
+            }
+        });
+    </script>
+</body>
+</html>
